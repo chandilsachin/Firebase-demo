@@ -1,13 +1,15 @@
 // Top-level build file where you can add configuration options common to all sub-projects/modules.
 
 buildscript {
-    
+    ext.firebase_version = '11.6.0'
+    ext.support_version = '26.0.0'
     repositories {
         google()
         jcenter()
     }
     dependencies {
         classpath 'com.android.tools.build:gradle:3.0.0-beta2'
+        classpath 'com.google.gms:google-services:3.1.1' // google-services plugin
         
 
         // NOTE: Do not place your application dependencies here; they belong
