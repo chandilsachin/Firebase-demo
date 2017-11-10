@@ -57,17 +57,29 @@ apply plugin: 'com.google.gms.google-services'
 ```
 
 #### Available libraries:
-com.google.firebase:firebase-core:11.6.0	> **Analytics**
+com.google.firebase:firebase-core:11.6.0	> **Analytics** 
+
 com.google.firebase:firebase-database:11.6.0	> **Realtime Database**
+
 com.google.firebase:firebase-firestore:11.6.0	> **Cloud Firestore**
+
 com.google.firebase:firebase-storage:11.6.0	> **Storage**
+
 com.google.firebase:firebase-crash:11.6.0	> **Crash Reporting**
+
 com.google.firebase:firebase-auth:11.6.0	> **Authentication**
+
 com.google.firebase:firebase-messaging:11.6.0	> **Cloud Messaging**
+
 com.google.firebase:firebase-config:11.6.0	> **Remote Config**
+
 com.google.firebase:firebase-invites:11.6.0	> **Invites and Dynamic Links**
+
 com.google.firebase:firebase-ads:11.6.0	> **AdMob**
+
 com.google.firebase:firebase-appindexing:11.6.0	> **App Indexing**
+
 com.google.firebase:firebase-perf:11.6.0	> **Performance Monitoring**
+
 
 Reference: https://firebase.google.com/docs/android/setup
