@@ -62,6 +62,10 @@ public class FirebaseLoginActivity extends AppCompatActivity implements Initiali
 
     @Override
     public void initialize() {
+        mFirebaseAuth = FirebaseAuth.getInstance();
+        progressDialog = new ProgressDialog(this);
+
+        // Google sign in configuration steps
         GoogleSignInOptions options = new GoogleSignInOptions.Builder(GoogleSignInOptions.DEFAULT_SIGN_IN)
                 .requestIdToken(getString(R.string.default_web_client_id))
                 .requestEmail()
@@ -72,8 +76,6 @@ public class FirebaseLoginActivity extends AppCompatActivity implements Initiali
                 .addApi(Auth.GOOGLE_SIGN_IN_API, options)
                 .build();
 
-        mFirebaseAuth = FirebaseAuth.getInstance();
-        progressDialog = new ProgressDialog(this);
     }
 
     @Override
@@ -97,10 +99,16 @@ public class FirebaseLoginActivity extends AppCompatActivity implements Initiali
     @Override
     protected void onStart() {
         super.onStart();
+        // Check if user is already logged in and update UI accordingly.
+        // getCurrentUser() method returns null, if user is not signed in.
         updateUI(mFirebaseAuth.getCurrentUser());
     }
 
 
+    /**
+     * updates UI according to login status.
+     * @param user if not null -> user is already signed in.
+     */
     private void updateUI(FirebaseUser user) {
         if (user != null) {
             Toast.makeText(FirebaseLoginActivity.this, "Welcome " + user.getDisplayName(),
@@ -128,11 +136,16 @@ public class FirebaseLoginActivity extends AppCompatActivity implements Initiali
         }
     }
 
+    /**
+     * uses Google credentials to login into firebase.
+     * @param account
+     */
     private void firebaseAuthWithGoogleCredential(GoogleSignInAccount account) {
         Log.d(TAG, "firebaseAuthWithGoogle:" + account.getId());
-
+        // get credential
         AuthCredential credential = GoogleAuthProvider.getCredential(account.getIdToken(), null);
         progressDialog.show("Signing you in ...");
+
         mFirebaseAuth.signInWithCredential(credential)
                 .addOnCompleteListener(this, new OnCompleteListener<AuthResult>() {
                     @Override

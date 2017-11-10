@@ -1,5 +1,5 @@
 <resources>
-    <string name="app_name">Firebase handsOn_Java</string>
+    <string name="app_name">Firebase handsOn</string>
     <string name="firebase_login">Firebase login</string>
     <string name="firebase_cloud_database">Firebase cloud database</string>
     <string name="sign_out">Sign out</string>
