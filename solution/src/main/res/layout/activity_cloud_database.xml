@@ -50,7 +50,7 @@
         android:hint="Name"
         android:inputType="textPersonName"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="@+id/guideline"
+        app:layout_constraintStart_toEndOf="@+id/textViewTitle"
         app:layout_constraintTop_toTopOf="@+id/guideline3" />
 
     <android.support.constraint.Guideline
@@ -101,5 +101,17 @@
         android:layout_marginTop="8dp"
         app:layout_constraintStart_toStartOf="@+id/guideline"
         app:layout_constraintTop_toBottomOf="@+id/spinnerGender" />
+
+    <TextView
+        android:id="@+id/textViewTitle"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="0dp"
+        android:layout_marginTop="0dp"
+        android:text="Mr."
+        android:visibility="gone"
+        app:layout_constraintBottom_toBottomOf="@+id/textView2"
+        app:layout_constraintStart_toStartOf="@+id/guideline"
+        app:layout_constraintTop_toTopOf="@+id/textView2" />
 
 </android.support.constraint.ConstraintLayout>

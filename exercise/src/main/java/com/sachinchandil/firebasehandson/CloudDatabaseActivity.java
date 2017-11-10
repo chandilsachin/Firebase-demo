@@ -6,9 +6,11 @@ import android.util.Log;
 import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.MenuItem;
+import android.view.View;
 import android.widget.ArrayAdapter;
 import android.widget.EditText;
 import android.widget.Spinner;
+import android.widget.TextView;
 import android.widget.Toast;
 
 import com.google.firebase.auth.FirebaseAuth;
@@ -18,6 +20,8 @@ import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.ValueEventListener;
+import com.google.firebase.remoteconfig.FirebaseRemoteConfig;
+import com.google.firebase.remoteconfig.FirebaseRemoteConfigSettings;
 import com.sachinchandil.model.User;
 import com.sachinchandil.utils.Initializer;
 import com.sachinchandil.utils.ProgressDialog;
@@ -27,6 +31,7 @@ import butterknife.ButterKnife;
 
 public class CloudDatabaseActivity extends AppCompatActivity implements Initializer {
 
+    public static final String CONFIG_KEY_ENABLE_TITLE = "enable_title";
     private static final String TAG = CloudDatabaseActivity.class.getSimpleName();
 
     // -- Views
@@ -36,6 +41,8 @@ public class CloudDatabaseActivity extends AppCompatActivity implements Initiali
     Spinner spinnerGender;
     @BindView(R.id.spinnerMaritalStatus)
     Spinner spinnerMaritalStatus;
+    @BindView(R.id.textViewTitle)
+    TextView textViewTitle;
 
     // -- Member variables
     private boolean mEditMode;
@@ -45,6 +52,7 @@ public class CloudDatabaseActivity extends AppCompatActivity implements Initiali
     private ValueEventListener mUserInfoChangeListener;
     private ProgressDialog mProgressDialog;
     private FirebaseAuth mFirebaseAuth;
+    private FirebaseRemoteConfig mRemoteConfig;
 
 
     @Override
@@ -99,6 +107,50 @@ public class CloudDatabaseActivity extends AppCompatActivity implements Initiali
         // do not forget to remove "mUserInfoChangeListener" in onStop method.
         //TODO("pass ValueEventListener in place of `null`")
         mDatabaseReference.addValueEventListener(null);
+
+        setUpRemoteConfig();
+    }
+
+    /**
+     * sets up remote config.
+     */
+    private void setUpRemoteConfig() {
+        mRemoteConfig = FirebaseRemoteConfig.getInstance();
+
+        // set default values
+        mRemoteConfig.setDefaults(R.xml.remote_config_defaults);
+
+        // create setting for development mode, which we can use to bypass expiration duration configured for final app release.
+        FirebaseRemoteConfigSettings configSettings = new FirebaseRemoteConfigSettings.Builder()
+                .setDeveloperModeEnabled(BuildConfig.DEBUG)
+                .build();
+        mRemoteConfig.setConfigSettings(configSettings);
+
+        //TODO("Fetch remote config value")
+    }
+
+    /**
+     * fetches config value
+     */
+    private void fetchConfigValue(){
+        // default cache expiration time in seconds
+        long cacheExpiration = 3600;
+
+        // if developer mode, reset cache expiration time to 0 to bypass expiration duration.
+        if(mRemoteConfig.getInfo().getConfigSettings().isDeveloperModeEnabled()){
+            cacheExpiration = 0;
+        }
+
+        mRemoteConfig.fetch(cacheExpiration).addOnCompleteListener(task -> {
+            if (task.isSuccessful()) {
+                Log.d(TAG, "Fetch successful.");
+                mRemoteConfig.activateFetched();
+
+            } else {
+                Log.d(TAG, "Fetch failed!");
+            }
+            resetViewState();
+        });
     }
 
     @Override
@@ -192,7 +244,11 @@ public class CloudDatabaseActivity extends AppCompatActivity implements Initiali
             editTextName.setEnabled(false);
             spinnerMaritalStatus.setEnabled(false);
             spinnerGender.setEnabled(false);
+        }
 
+        if(mRemoteConfig != null) {
+            // show title textView if `enable_title` is set to true on firebase console.
+            textViewTitle.setVisibility(mRemoteConfig.getBoolean(CONFIG_KEY_ENABLE_TITLE) ? View.VISIBLE : View.GONE);
         }
     }
 

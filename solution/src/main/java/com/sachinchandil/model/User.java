@@ -5,11 +5,20 @@ package com.sachinchandil.model;
  */
 
 public class User {
+    private String title;
     private String name;
     private String gender;
     private String maritalStatus;
     private String emailAddress;
 
+
+    public String getTitle() {
+        return title;
+    }
+
+    public void setTitle(String title) {
+        this.title = title;
+    }
 
     public String getName() {
         return name;
